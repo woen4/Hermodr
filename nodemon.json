@@ -1,0 +1,6 @@
+{
+  "events": {
+    "restart": "clear"
+  },
+  "delay": "0"
+}

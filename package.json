@@ -1,0 +1,30 @@
+{
+  "name": "socketio-example",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "dev": "nodemon --exec babel-node src/server.js"
+  },
+  "nodemonConfig": {
+    "events": {
+      "restart": "kill $(sudo lsof -t -i:4000) && clear",
+      "crash": "kill $(sudo lsof -t -i:4000)"
+    },
+    "delay": "100"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "mongoose": "^5.11.11",
+    "socket.io": "^3.0.5",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.12.10",
+    "@babel/core": "^7.12.10",
+    "@babel/node": "^7.12.10",
+    "@babel/preset-env": "^7.12.11",
+    "nodemon": "2.0.4"
+  }
+}
