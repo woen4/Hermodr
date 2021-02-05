@@ -1,8 +1,7 @@
 import Message from '../factories/messageFactory';
-import { generateRoomId } from '../utils';
 import { Binder } from '../utils';
 
-class MessageListeners {
+class MessageHandlers {
   constructor({ socket }) {
     this.socket = socket;
     Binder.call(this);
@@ -10,11 +9,9 @@ class MessageListeners {
 
   async newMessage(message) {
     console.log('> [ NEW MESSAGE ]');
-
-    const roomId = generateRoomId(message);
-    this.socket.to(roomId).emit('newMessage', message);
+    //this.socket.to(roomId).emit('newMessage', message);
     await Message.create(message);
   }
 }
 
-export default new MessageListeners();
+export default new MessageHandlers();

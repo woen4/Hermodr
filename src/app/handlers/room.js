@@ -1,7 +1,7 @@
 import { v5 as uuidv5, validate as uuidValidate } from 'uuid';
 
-class RoomGenerator {
-  middleare(socket, next) {
+class RoomHandlers {
+  joinToRoom(socket, next) {
     const { userId1, userId2, roomId } = socket.handshake.query;
 
     if (roomId) {
@@ -54,4 +54,4 @@ class RoomGenerator {
   }
 }
 
-export default new RoomGenerator();
+export default new RoomHandlers();

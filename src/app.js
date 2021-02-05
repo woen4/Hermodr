@@ -57,4 +57,4 @@ class App {
   }
 }
 
-export default new App();
+export default new App().server;
