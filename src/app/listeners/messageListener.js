@@ -2,7 +2,7 @@ import Message from '../factories/messageFactory';
 import { generateRoomId } from '../utils';
 import { Binder } from '../utils';
 
-class MessageEvents {
+class MessageListeners {
   constructor({ socket }) {
     this.socket = socket;
     Binder.call(this);
@@ -17,4 +17,4 @@ class MessageEvents {
   }
 }
 
-export default MessageEvents;
+export default new MessageListeners();

@@ -3,7 +3,6 @@ import { server } from './app';
 import socketioConfig from './config/socketio';
 
 import MessageEvents from './app/events/messageEvents';
-import MessageGroupEvents from './app/events/messageGroupEvents';
 
 const io = socketio(server, socketioConfig);
 
