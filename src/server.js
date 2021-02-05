@@ -1,7 +1,7 @@
-import { wsServer } from './socket';
+import server from './app';
 
 const PORT = 4000;
 
-wsServer.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`> [ SERVER ] is running in port: ${PORT}  `);
 });

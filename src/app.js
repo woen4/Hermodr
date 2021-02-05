@@ -1,29 +1,60 @@
 import express from 'express';
 import http from 'http';
-import routes from './routes';
 import mongoose from 'mongoose';
 import cors from 'cors';
+import socketio from 'socket.io';
 
-const app = express();
+import routes from './routes';
+import config from './config';
 
-mongoose
-  .connect('mongodb://localhost:27017/hermodr', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useFindAndModify: true,
-  })
-  .then(() => {
-    console.log('> [ MongoDB ] was connected');
-  });
+import MessageEvents from './app/events/messageEvents';
 
-app.use(
-  cors({
-    origin: '*',
-  })
-);
+class App {
+  constructor() {
+    this.app = express();
+    this.httpMiddlewares();
+    this.connectToDatabase();
 
-app.use(express.json());
+    this.server = http.createServer(this.app);
 
-app.use(routes);
+    this.websocket = socketio(this.server, config.socketio);
+    this.initWebsocket();
+  }
 
-export const server = http.createServer(app);
+  initWebsocket() {
+    this.websocket.on('connection', (wsInstance) => {
+      wsInstance.on('joinToRoom', (roomId) => {
+        console.log('> [ NEW JOIN ] in room : ' + roomId);
+        wsInstance.join(roomId);
+      });
+
+      const messageEvents = new MessageEvents({ socket: wsInstance });
+
+      wsInstance.on('newMessage', messageEvents.newMessage);
+    });
+  }
+
+  httpMiddlewares() {
+    this.app.use(cors(config.cors));
+
+    this.app.use(express.json());
+
+    this.app.use(routes);
+  }
+
+  webSocketMiddlewares() {}
+
+  connectToDatabase() {
+    mongoose
+      .connect('mongodb://localhost:27017/hermodr', {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        useFindAndModify: true,
+      })
+      .then(() => {
+        console.log('> [ MongoDB ] was connected');
+      });
+  }
+}
+
+export default new App();
