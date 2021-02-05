@@ -7,8 +7,7 @@ import socketio from 'socket.io';
 import routes from './routes';
 import config from './config';
 
-import MessageEvents from './app/events/messageEvents';
-
+import Handlers from './app/handlers';
 class App {
   constructor() {
     this.app = express();
@@ -18,19 +17,18 @@ class App {
     this.server = http.createServer(this.app);
 
     this.websocket = socketio(this.server, config.socketio);
+
     this.initWebsocket();
   }
 
   initWebsocket() {
-    this.websocket.on('connection', (wsInstance) => {
-      wsInstance.on('joinToRoom', (roomId) => {
-        console.log('> [ NEW JOIN ] in room : ' + roomId);
-        wsInstance.join(roomId);
+    this.websocket.on('connection', (socket) => {
+      const handlers = Handlers(socket);
+
+      handlers.forEach((handler) => {
+        console.log(handler.toString() + ' is listening');
+        this.socket.on(handler.toString(), handler);
       });
-
-      const messageEvents = new MessageEvents({ socket: wsInstance });
-
-      wsInstance.on('newMessage', messageEvents.newMessage);
     });
   }
 

@@ -1,22 +1,22 @@
 import { v5 as uuidv5, validate as uuidValidate } from 'uuid';
-
+import { Binder } from '../utils';
 class RoomHandlers {
-  joinToRoom(socket, next) {
-    const { userId1, userId2, roomId } = socket.handshake.query;
-
-    if (roomId) {
-      socket.roomId = roomId;
-      next();
-      return;
-    }
-
-    socket.roomId = this.generateRoomId(userId1, userId2);
-    next();
-
-    return;
+  constructor({ socket }) {
+    this.socket = socket;
+    Binder.call(this);
   }
 
-  generateRoomId(id1, id2) {
+  joinToRoom() {
+    const { userId1, userId2, roomId } = this.socket.handshake.query;
+
+    if (roomId) {
+      this.socket.roomId = roomId;
+    }
+
+    this.socket.roomId = this.generateRoomId(userId1, userId2);
+  }
+
+  static generateRoomId(id1, id2) {
     if (!uuidValidate(id1) || !uuidValidate(id2)) {
       throw new Error("Estes não são uuid's válidos");
     }
@@ -54,4 +54,4 @@ class RoomHandlers {
   }
 }
 
-export default new RoomHandlers();
+export default RoomHandlers;

@@ -1,4 +1,4 @@
-import { Binder } from '../utils';
+import { Binder } from '../../utils';
 
 class MessageService {
   constructor({ messageRepository }) {

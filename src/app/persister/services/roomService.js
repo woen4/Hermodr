@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import { Binder } from '../utils';
+import { Binder } from '../../utils';
 
 class RoomService {
   constructor({ roomRepository }) {

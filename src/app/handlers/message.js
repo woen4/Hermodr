@@ -1,4 +1,4 @@
-import Message from '../factories/messageFactory';
+//import Message from '../factories/messageFactory';
 import { Binder } from '../utils';
 
 class MessageHandlers {
@@ -10,8 +10,8 @@ class MessageHandlers {
   async newMessage(message) {
     console.log('> [ NEW MESSAGE ]');
     //this.socket.to(roomId).emit('newMessage', message);
-    await Message.create(message);
+    //await Message.create(message);
   }
 }
 
-export default new MessageHandlers();
+export default MessageHandlers;
