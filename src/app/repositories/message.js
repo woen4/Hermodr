@@ -1,8 +1,6 @@
-import Message from '../schemas/messageSchema';
+import Message from '../schemas/message';
 
 class MessageRepository {
-  constructor() {}
-
   async create(message) {
     await Message.create(message);
   }
@@ -16,4 +14,4 @@ class MessageRepository {
   }
 }
 
-export default MessageRepository;
+export default new MessageRepository();

@@ -1,10 +1,15 @@
 import { v4 as uuidv4 } from 'uuid';
-import { Binder } from '../../utils';
+import { Binder, generateRoomId } from '../utils';
+import Room from '../schemas/message';
 
 class RoomService {
-  constructor({ roomRepository }) {
-    this.Room = roomRepository;
+  constructor({ socket }) {
     Binder.call(this);
+    this.socket = socket;
+  }
+
+  join({ userId1, userId2, roomId }) {
+    this.socket.join(roomId | generateRoomId(userId1, userId2));
   }
 
   async open(request, response) {
@@ -15,19 +20,19 @@ class RoomService {
       users: [{ id: user.id, name: user.name, isAdmin: true }],
       connectedUsers: [user.id],
     };
-    await this.Room.create(room);
+    await Room.create(room);
     return response.json({ roomId, message: 'Sala de chat aberta' });
   }
 
   async close(request, response) {
     const { roomId } = request.params;
-    await this.Room.delete(roomId);
+    await Room.delete(roomId);
     return response.json({ message: 'Sala de chat deletada' });
   }
 
   async addUser(request, response) {
     const { adminId, newUser } = request.body;
-    const room = await this.Room.addUser(adminId, newUser);
+    const room = await Room.addUser(adminId, newUser);
     return response.json({ room });
   }
 
@@ -35,7 +40,7 @@ class RoomService {
 
   async removeUser(request, response) {
     const { adminId, userId } = request.params;
-    const room = await this.Room.removeUser(adminId, userId);
+    const room = await Room.removeUser(adminId, userId);
     return response.json({ room });
   }
 

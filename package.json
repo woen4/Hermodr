@@ -1,5 +1,5 @@
 {
-  "name": "socketio-example",
+  "name": "hermodr",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
@@ -17,6 +17,7 @@
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "fastest-validator": "^1.10.0",
     "mongoose": "^5.11.11",
     "socket.io": "^3.0.5",
     "uuid": "^8.3.2"

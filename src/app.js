@@ -6,8 +6,7 @@ import socketio from 'socket.io';
 
 import routes from './routes';
 import config from './config';
-
-import Handlers from './app/handlers';
+import handlers from './app/handlers';
 class App {
   constructor() {
     this.app = express();
@@ -23,11 +22,9 @@ class App {
 
   initWebsocket() {
     this.websocket.on('connection', (socket) => {
-      const handlers = Handlers(socket);
-
-      handlers.forEach((handler) => {
-        console.log(handler.toString() + ' is listening');
-        this.socket.on(handler.toString(), handler);
+      //Load handlers
+      handlers(socket).forEach(([handlerName, handler]) => {
+        socket.on(handlerName, handler);
       });
     });
   }
@@ -39,8 +36,6 @@ class App {
 
     this.app.use(routes);
   }
-
-  webSocketMiddlewares() {}
 
   connectToDatabase() {
     mongoose

@@ -7,7 +7,6 @@ const RoomSchema = new Schema(
       {
         name: String,
         id: String,
-        isAdmin: { type: Boolean, default: false },
       },
     ],
     connectedUsers: [String],

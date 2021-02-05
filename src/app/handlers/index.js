@@ -1,22 +1,16 @@
-import MessageHandler from './message';
-import RoomHandler from './room';
+import RoomService from '../services/room';
+import MessageService from '../services/message';
 
-import { GetMethods } from '../utils';
+function handlers(socket) {
+  const roomService = new RoomService({ socket });
+  const messageService = new MessageService({ socket });
 
-function handlersFactory(socket) {
-  const handlersClasses = [MessageHandler, RoomHandler];
+  const handlers = {
+    joinToRoom: roomService.join,
+    newMessage: messageService.create,
+  };
 
-  const handlers = [];
-
-  handlersClasses.forEach((Handler) => {
-    const instance = new Handler({ socket });
-
-    GetMethods.call(instance).forEach((method) =>
-      handlers.push(instance[method])
-    );
-  });
-
-  return handlers;
+  return Object.entries(handlers);
 }
 
-export default handlersFactory;
+export default handlers;
