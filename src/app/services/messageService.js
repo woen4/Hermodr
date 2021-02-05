@@ -6,20 +6,18 @@ class MessageService {
     Binder.call(this);
   }
 
-  async create({ sender, receiver, content }) {
-    const message = {
-      sender,
-      receiver,
-      content,
+  async create(message) {
+    const data = {
+      ...message,
       timestamp: new Date(),
     };
 
-    await this.Message.create(message);
+    await this.Message.create(data);
   }
 
   async show(request, response) {
-    const { senderId, receiverId } = request.params;
-    const messages = await this.Message.show(senderId, receiverId);
+    const { roomId } = request.params;
+    const messages = await this.Message.show(roomId);
     return response.json(messages);
   }
 }
