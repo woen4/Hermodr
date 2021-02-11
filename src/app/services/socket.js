@@ -4,14 +4,14 @@ import { Binder, uuid } from '../utils';
 import MessageRepository from '../repositories/message';
 import MessageValidator from '../validators/message';
 
-class MessageService {
+class SocketService {
   constructor({ socket }) {
     Binder.call(this);
     this.socket = socket;
     this.room = socket?.room;
   }
 
-  async create(message) {
+  async onNewMessage(message) {
     const data = {
       ...message,
       id: uuid(),
@@ -27,11 +27,14 @@ class MessageService {
     consola.info('New message registered');
   }
 
-  async show(request, response) {
-    console.log(this.socket);
+  async onConnectUser() {}
+
+  async showMessage(request, response) {
     const messages = await MessageRepository.show(this.room);
     return response.json(messages);
   }
+
+  async showConnectedUsers() {}
 }
 
-export default MessageService;
+export default SocketService;

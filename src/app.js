@@ -5,10 +5,10 @@ import cors from 'cors';
 import socketio from 'socket.io';
 import consola from 'consola';
 
-import routes from './routes';
+import { nonSocketRoutes, socketRoutes } from './routes';
 import * as config from './config';
-import generateInstances from './app/factory';
-import mainHandler, { otherHandlers } from './app/handlers';
+import SocketService from './app/services/socket';
+import mainHandler, { handlers } from './app/handlers';
 class App {
   constructor() {
     this.app = express();
@@ -24,17 +24,26 @@ class App {
 
     websocket.on('connection', (socket) => {
       const socketLoaded = mainHandler(socket);
-      this.services = generateInstances(socketLoaded);
-      otherHandlers(socketLoaded, this.services);
-      this.loadRoutes(this.services);
+      const socketService = new SocketService({ socket: socketLoaded });
+
+      this.loadHandlers(socketService, socketLoaded);
+      this.loadSocketRoutes(socketService);
     });
   }
 
-  loadRoutes(services) {
-    this.app.use(routes(services));
+  loadHandlers(socketService, socket) {
+    handlers(socketService).forEach(([handlerName, handler]) => {
+      consola.info(`${handlerName} handler is listening...`);
+      socket.on(handlerName, handler);
+    });
+  }
+
+  loadSocketRoutes(socketService) {
+    this.app.use(socketRoutes(socketService));
   }
 
   httpMiddlewares() {
+    this.app.use(nonSocketRoutes());
     this.app.use(cors(config.cors));
     this.app.use(express.json());
   }

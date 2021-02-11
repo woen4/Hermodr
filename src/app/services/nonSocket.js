@@ -1,10 +1,9 @@
 import { Binder, generateRoomId, uuid } from '../utils';
 import Room from '../schemas/message';
 
-class RoomService {
-  constructor({ socket }) {
+class NonSocketService {
+  constructor() {
     Binder.call(this);
-    this.socket = socket;
   }
 
   async open(request, response) {
@@ -15,13 +14,13 @@ class RoomService {
       connectedUsers: [user.id],
     };
     await Room.create(room);
-    return response.json({ roomId, message: 'Sala de chat aberta' });
+    return response.status(200);
   }
 
   async close(request, response) {
     const { roomId } = request.params;
     await Room.delete(roomId);
-    return response.json({ message: 'Sala de chat deletada' });
+    return response.status(200);
   }
 
   async addUser(request, response) {
@@ -30,15 +29,11 @@ class RoomService {
     return response.json({ room });
   }
 
-  async connectUser() {}
-
   async removeUser(request, response) {
     const { adminId, userId } = request.params;
     const room = await Room.removeUser(adminId, userId);
     return response.json({ room });
   }
-
-  async disconnectUser() {}
 }
 
-export default RoomService;
+export default NonSocketService;

@@ -1,15 +1,22 @@
 import { Router } from 'express';
+import NonSocketService from './app/services/nonSocket';
 
-function routes(services) {
+export function nonSocketRoutes() {
   const router = Router();
-  const { messageService } = services;
-  /*   routes.post('/room', roomService.open);
-  routes.delete('/room/:roomId', roomService.close);
-  routes.put('/room/user', roomService.addUser);
-  routes.delete('/room/user/:adminId/:userId', roomService.removeUser); */
+  const nonSocketService = new NonSocketService();
 
-  router.get('/message', messageService.show);
+  router.post('/room', nonSocketService.open);
+  router.delete('/room/:roomId', nonSocketService.close);
+  router.put('/room/user', nonSocketService.addUser);
+  router.delete('/room/user/:adminId/:userId', nonSocketService.removeUser);
+
   return router;
 }
 
-export default routes;
+export function socketRoutes(socketService) {
+  const router = Router();
+
+  router.get('/message', socketService.showMessage);
+
+  return router;
+}
