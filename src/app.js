@@ -5,44 +5,38 @@ import cors from 'cors';
 import socketio from 'socket.io';
 import consola from 'consola';
 
-import { generateRoomId } from './app/utils';
 import routes from './routes';
-import config from './config';
-import handlers from './app/handlers';
+import * as config from './config';
+import generateInstances from './app/factory';
+import mainHandler, { otherHandlers } from './app/handlers';
 class App {
   constructor() {
     this.app = express();
-    this.httpMiddlewares();
-    this.connectToDatabase();
-
+    this.services = [];
     this.server = http.createServer(this.app);
 
-    this.websocket = socketio(this.server, config.socketio);
-
+    this.connectToDatabase();
     this.initWebsocket();
   }
 
   initWebsocket() {
-    this.websocket.on('connection', (socket) => {
-      //Main handler
-      const { userId1, userId2, roomId } = socket.handshake.headers.room;
-      const room = roomId || generateRoomId(userId1, userId2);
-      socket.join(room);
+    const websocket = socketio(this.server, config.socketio);
 
-      //Load others handlers
-      handlers(socket, room).forEach(([handlerName, handler]) => {
-        consola.info(`${handlerName} handler is listening...`);
-        socket.on(handlerName, handler);
-      });
+    websocket.on('connection', (socket) => {
+      const socketLoaded = mainHandler(socket);
+      this.services = generateInstances(socketLoaded);
+      otherHandlers(socketLoaded, this.services);
+      this.loadRoutes(this.services);
     });
+  }
+
+  loadRoutes(services) {
+    this.app.use(routes(services));
   }
 
   httpMiddlewares() {
     this.app.use(cors(config.cors));
-
     this.app.use(express.json());
-
-    this.app.use(routes);
   }
 
   connectToDatabase() {

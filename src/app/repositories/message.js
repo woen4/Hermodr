@@ -1,4 +1,5 @@
 import Message from '../schemas/message';
+import { messageQuery } from '../../config';
 
 class MessageRepository {
   async create(message) {
@@ -6,9 +7,13 @@ class MessageRepository {
   }
 
   async show(roomId) {
-    const messages = await Message.find({
-      room_id: roomId,
-    });
+    const messages = await Message.find(
+      {
+        room_id: roomId,
+      },
+      null,
+      { limit: messageQuery.limit }
+    );
     return messages;
   }
 }
