@@ -1,5 +1,4 @@
-import { v4 as uuidv4 } from 'uuid';
-import { Binder, generateRoomId } from '../utils';
+import { Binder, generateRoomId, uuid } from '../utils';
 import Room from '../schemas/message';
 
 class RoomService {
@@ -8,15 +7,10 @@ class RoomService {
     this.socket = socket;
   }
 
-  join({ userId1, userId2, roomId }) {
-    this.socket.join(roomId | generateRoomId(userId1, userId2));
-  }
-
   async open(request, response) {
     const { user } = request.body;
-    const roomId = uuidv4();
     const room = {
-      id: roomId,
+      id: uuid(),
       users: [{ id: user.id, name: user.name, isAdmin: true }],
       connectedUsers: [user.id],
     };

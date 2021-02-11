@@ -5,10 +5,9 @@ class MessageRepository {
     await Message.create(message);
   }
 
-  async show(senderId, receiverId) {
+  async show(roomId) {
     const messages = await Message.find({
-      'sender.id': senderId,
-      'receiver.id': receiverId,
+      room_id: roomId,
     });
     return messages;
   }

@@ -2,6 +2,7 @@ import {
   validate as uuidValidate,
   version as uuidVersion,
   v5 as uuidv5,
+  v4 as uuidv4,
 } from 'uuid';
 
 export function Binder() {
@@ -27,9 +28,14 @@ export function uuidIsValid(uuid, version) {
   return uuidValidate(uuid) && uuidVersion(uuid) === version;
 }
 
+export function uuid() {
+  return uuidv4();
+}
+
 export function generateRoomId(id1, id2) {
   if (!uuidIsValid(id1, 4) || !uuidIsValid(id1, 4)) {
-    console.log("Estes não são uuid's válidos");
+    console.error("Invalid uuid's");
+    return;
   }
 
   const alphabet = 'abcdefghijklmnopqrstuvwxyz'.split();

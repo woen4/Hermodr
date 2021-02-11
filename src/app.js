@@ -3,7 +3,9 @@ import http from 'http';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import socketio from 'socket.io';
+import consola from 'consola';
 
+import { generateRoomId } from './app/utils';
 import routes from './routes';
 import config from './config';
 import handlers from './app/handlers';
@@ -22,8 +24,14 @@ class App {
 
   initWebsocket() {
     this.websocket.on('connection', (socket) => {
-      //Load handlers
-      handlers(socket).forEach(([handlerName, handler]) => {
+      //Main handler
+      const { userId1, userId2, roomId } = socket.handshake.headers.room;
+      const room = roomId || generateRoomId(userId1, userId2);
+      socket.join(room);
+
+      //Load others handlers
+      handlers(socket, room).forEach(([handlerName, handler]) => {
+        consola.info(`${handlerName} handler is listening...`);
         socket.on(handlerName, handler);
       });
     });
@@ -45,7 +53,10 @@ class App {
         useFindAndModify: true,
       })
       .then(() => {
-        console.log('> [ MongoDB ] was connected');
+        consola.success('MongoDB was connected');
+      })
+      .catch(() => {
+        consola.error('Error to connect MongoDB');
       });
   }
 }

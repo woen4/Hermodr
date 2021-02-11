@@ -3,9 +3,9 @@ import Validator from 'fastest-validator';
 const validator = new Validator();
 
 const messageValidator = {
-  room_id: { type: 'string', min: 36, max: 36 },
-  author_id: { type: 'string', min: 36, max: 36 },
-  author_name: { type: 'string', min: 4, max: 36 },
+  room_id: { type: 'uuid', version: 5 },
+  user_id: { type: 'uuid', version: 4 },
+  user_name: { type: 'string', min: 4, max: 50 },
   content: { type: 'string', min: 1, max: 255 },
 };
 

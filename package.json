@@ -15,6 +15,7 @@
     "delay": "100"
   },
   "dependencies": {
+    "consola": "^2.15.2",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "fastest-validator": "^1.10.0",

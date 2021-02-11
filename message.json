@@ -1,0 +1,13 @@
+{
+  "message": {
+    "user_id": "1e4d2cce-5e95-4546-a996-4970b4dadcda",
+    "user_name": "Kaio Woen",
+    "room_id": "e3e59734-2d21-5a09-a126-d4851f0a97dc",
+    "content": "Nova mensagem"
+  },
+
+  "join": {
+    "userId1": "84385fe9-c66e-4344-bb1c-d5e68a189cf5",
+    "userId2": "1e4d2cce-5e95-4546-a996-4970b4dadcda"
+  }
+}

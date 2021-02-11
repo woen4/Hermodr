@@ -1,12 +1,11 @@
 import RoomService from '../services/room';
 import MessageService from '../services/message';
 
-function handlers(socket) {
-  const roomService = new RoomService({ socket });
-  const messageService = new MessageService({ socket });
+function handlers(socket, room) {
+  const roomService = new RoomService({ socket, room });
+  const messageService = new MessageService({ socket, room });
 
   const handlers = {
-    joinToRoom: roomService.join,
     newMessage: messageService.create,
   };
 
