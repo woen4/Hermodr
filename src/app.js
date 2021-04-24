@@ -15,6 +15,7 @@ class App {
     this.services = [];
     this.server = http.createServer(this.app);
 
+    this.httpMiddlewares();
     this.connectToDatabase();
     this.initWebsocket();
   }
@@ -39,13 +40,13 @@ class App {
   }
 
   loadSocketRoutes(socketService) {
-    this.app.use(socketRoutes(socketService));
+    this.app.use('chat', socketRoutes(socketService));
   }
 
   httpMiddlewares() {
-    this.app.use(nonSocketRoutes());
-    this.app.use(cors(config.cors));
     this.app.use(express.json());
+    this.app.use(cors(config.cors));
+    this.app.use(nonSocketRoutes());
   }
 
   connectToDatabase() {

@@ -5,8 +5,8 @@ export function nonSocketRoutes() {
   const router = Router();
   const nonSocketService = new NonSocketService();
 
-  router.post('/room', nonSocketService.open);
-  router.delete('/room/:roomId', nonSocketService.close);
+  router.post('/room', nonSocketService.createRoom);
+  router.delete('/room/:roomId', nonSocketService.deleteRoom);
   router.put('/room/user', nonSocketService.addUser);
   router.delete('/room/user/:adminId/:userId', nonSocketService.removeUser);
 

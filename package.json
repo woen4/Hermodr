@@ -12,7 +12,7 @@
       "restart": "kill $(sudo lsof -t -i:4000) && clear",
       "crash": "kill $(sudo lsof -t -i:4000)"
     },
-    "delay": "100"
+    "delay": "500"
   },
   "dependencies": {
     "consola": "^2.15.2",

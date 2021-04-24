@@ -1,38 +1,44 @@
 import { Binder, generateRoomId, uuid } from '../utils';
-import Room from '../schemas/message';
+import RoomRepository from '../repositories/room';
 
 class NonSocketService {
   constructor() {
     Binder.call(this);
+    this.Room = new RoomRepository();
   }
 
-  async open(request, response) {
+  async createRoom(request, response) {
     const { user } = request.body;
+
+    const roomId = uuid();
     const room = {
-      id: uuid(),
-      users: [{ id: user.id, name: user.name, isAdmin: true }],
-      connectedUsers: [user.id],
+      id: roomId,
+      users: [{ id: user.id, name: user.name }],
+      connectedUsers: [],
     };
-    await Room.create(room);
-    return response.status(200);
+    await this.Room.create(room);
+    return response.status(200).json({ roomId });
   }
 
-  async close(request, response) {
+  async deleteRoom(request, response) {
     const { roomId } = request.params;
-    await Room.delete(roomId);
+    await this.Room.delete(roomId);
     return response.status(200);
   }
 
   async addUser(request, response) {
-    const { adminId, newUser } = request.body;
-    const room = await Room.addUser(adminId, newUser);
-    return response.json({ room });
+    const {
+      roomId,
+      user: { id, name },
+    } = request.body;
+    const room = await this.Room.addUser(roomId, { id, name });
+    return response.json(room);
   }
 
   async removeUser(request, response) {
     const { adminId, userId } = request.params;
-    const room = await Room.removeUser(adminId, userId);
-    return response.json({ room });
+    const room = await this.Room.removeUser(adminId, userId);
+    return response.json(room);
   }
 }
 

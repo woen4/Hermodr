@@ -1,4 +1,4 @@
-import Room from '../schemas/roomSchema';
+import Room from '../schemas/room';
 
 class RoomRepository {
   constructor() {}
@@ -11,14 +11,25 @@ class RoomRepository {
     await Room.findOneAndUpdate({ id: roomId }, newRoom);
   }
 
-  async addUser(adminId, newUser) {
-    const room = await Room.findOneAndUpdate(
+  async addUser(roomId, newUser) {
+    const {
+      connectedUsers,
+      id,
+      users,
+      createdAt,
+    } = await Room.findOneAndUpdate(
       {
-        users: { $elemMatch: { id: adminId, isAdmin: true } },
+        id: roomId,
       },
       { $push: { users: newUser } }
     );
-    return room;
+
+    return {
+      connectedUsers,
+      id,
+      users,
+      createdAt,
+    };
   }
 
   async removeUser(adminId, userId) {
